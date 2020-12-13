@@ -1,23 +1,26 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+AWSTemplateFormatVersion: 2010-09-09
+Transform: 'AWS::Serverless-2016-10-31'
 Description: Python file including external library
 Resources:
-  A3lf2ApiGateway:
+  MyAPI:
     Type: 'AWS::Serverless::Api'
     Properties:
       StageName: vs
-      OpenApiVersion: "2.0"
-      DefinitionUri: search_apigateway.yaml
+      OpenApiVersion: '2.0'
+      DefinitionUri: 's3://testpipelinegithubqm/837df3ed8b30f840dd08d1929d52d2da'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: cf662349-8d2b-4055-b729-11fdab17086b
   Frontlexlf2:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
       Handler: front2lex.lambda_handler
       Runtime: python3.8
       FunctionName: Frontlexlf2
-      CodeUri: ./src/front2lex #Directory the source file is
+      CodeUri: 's3://testpipelinegithubqm/16d389e20d88bd44433b5a8346846996'
       MemorySize: 128
       Timeout: 30
-      Role: arn:aws:iam::840723909099:role/service-role/front_lex-role-odw9js2u
+      Role: 'arn:aws:iam::840723909099:role/service-role/front_lex-role-odw9js2u'
       Policies:
         - AmazonS3FullAccess
         - AlexaForBusinessFullAccess
@@ -29,39 +32,79 @@ Resources:
             Path: /
             Method: get
             RestApiId:
-              Ref: A3lf2ApiGateway
+              Ref: MyAPI
       Environment:
         Variables:
           REGION: us-east-1
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 75f179fb-624e-4ce8-adfa-bb857a87907e
+    DependsOn:
+      - Searchlf2
   Searchlf2:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
       Handler: search_photos.lambda_handler
       Runtime: python3.8
       FunctionName: Searchlf2
-      CodeUri: ./src/index_photos #Directory the source file is
+      CodeUri: 's3://testpipelinegithubqm/5fc95cf9025340121ccc8332920f9372'
       MemorySize: 128
       Timeout: 3
-      Role: arn:aws:iam::840723909099:role/service-role/search-photos-role-1k677fab
+      Role: 'arn:aws:iam::840723909099:role/service-role/search-photos-role-1k677fab'
       Policies:
         - AWSLambdaBasicExecutionRole-a49340ea-df22-4378-ad40-0127997c95f2
       Environment:
         Variables:
           REGION: us-east-1
-  
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f48e4835-2a80-414b-ae35-424aba85766b
+    DependsOn:
+      - ED4G9IJ
   Indexlf:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Serverless::Function'
     Properties:
       Handler: search_photos.lambda_handler
       Runtime: python3.8
       FunctionName: Indexlf
-      CodeUri: ./src/search_photos #Directory the source file is
+      CodeUri: 's3://testpipelinegithubqm/45554be4e73e4c354870893a262b16d6'
       MemorySize: 128
       Timeout: 3
-      Role: arn:aws:iam::840723909099:role/service-role/photoIndex-role-sz2l5aln
+      Role: 'arn:aws:iam::840723909099:role/service-role/photoIndex-role-sz2l5aln'
       Policies:
         - AWSLambdaBasicExecutionRole-a49340ea-df22-4378-ad40-0127997c95f2
         - AmazonS3FullAccess
       Environment:
         Variables:
           REGION: us-east-1
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e2f229a0-3a9e-4189-8001-8abba8f64885
+    DependsOn:
+      - ED4G9IJ
+  ED4G9IJ:
+    Type: 'AWS::Elasticsearch::Domain'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 89c42226-fd68-42e3-93df-1513b1ce6558
+  photo:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d939f2ee-9476-451a-a0a6-9aa7872b1947
+    DependsOn:
+      - Indexlf
+  S3BN9ZR:
+    Type: 'AWS::S3::Bucket'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7f9d2521-d19a-4412-bb2b-c1193420bdb6
+    DependsOn:
+      - MyAPI
