@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+        python: 3.8
+  build:
+    commands:
+      - sam build
+      - sam package --s3-bucket testpipelinegithubqm --output-template-file outputtemplate.yml
+artifacts:
+  files:
+    - template.yml
+    - outputtemplate.yml
+
+
+    #BuildArtifact::outputtemplate.yml
+

@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Python file including external library
+Resources:
+  A3lf2ApiGateway:
+    Type: 'AWS::Serverless::Api'
+    Properties:
+      StageName: vs
+      OpenApiVersion: "2.0"
+      DefinitionUri: search_apigateway.yaml
+  Frontlexlf2:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: front2lex.lambda_handler
+      Runtime: python3.8
+      FunctionName: Frontlexlf2
+      CodeUri: ./src/front2lex #Directory the source file is
+      MemorySize: 128
+      Timeout: 30
+      Role: arn:aws:iam::840723909099:role/service-role/front_lex-role-odw9js2u
+      Policies:
+        - AmazonS3FullAccess
+        - AlexaForBusinessFullAccess
+        - AmazonLexFullAccess
+      Events:
+        HttpGet:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+            RestApiId:
+              Ref: A3lf2ApiGateway
+      Environment:
+        Variables:
+          REGION: us-east-1
+  Searchlf2:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: search_photos.lambda_handler
+      Runtime: python3.8
+      FunctionName: Searchlf2
+      CodeUri: ./src/index_photos #Directory the source file is
+      MemorySize: 128
+      Timeout: 3
+      Role: arn:aws:iam::840723909099:role/service-role/search-photos-role-1k677fab
+      Policies:
+        - AWSLambdaBasicExecutionRole-a49340ea-df22-4378-ad40-0127997c95f2
+      Environment:
+        Variables:
+          REGION: us-east-1
+  
+  Indexlf:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: search_photos.lambda_handler
+      Runtime: python3.8
+      FunctionName: Indexlf
+      CodeUri: ./src/search_photos #Directory the source file is
+      MemorySize: 128
+      Timeout: 3
+      Role: arn:aws:iam::840723909099:role/service-role/photoIndex-role-sz2l5aln
+      Policies:
+        - AWSLambdaBasicExecutionRole-a49340ea-df22-4378-ad40-0127997c95f2
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          REGION: us-east-1
