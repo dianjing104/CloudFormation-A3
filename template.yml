@@ -7,7 +7,7 @@ Resources:
     Properties:
       StageName: vs
       OpenApiVersion: '2.0'
-      DefinitionUri: 's3://testpipelinegithubqm/837df3ed8b30f840dd08d1929d52d2da'
+      DefinitionUri: search_apigateway.yaml
     Metadata:
       'AWS::CloudFormation::Designer':
         id: cf662349-8d2b-4055-b729-11fdab17086b
@@ -17,7 +17,7 @@ Resources:
       Handler: front2lex.lambda_handler
       Runtime: python3.8
       FunctionName: Frontlexlf2
-      CodeUri: 's3://testpipelinegithubqm/16d389e20d88bd44433b5a8346846996'
+      CodeUri: ./src/front2lex
       MemorySize: 128
       Timeout: 30
       Role: 'arn:aws:iam::840723909099:role/service-role/front_lex-role-odw9js2u'
@@ -47,7 +47,7 @@ Resources:
       Handler: search_photos.lambda_handler
       Runtime: python3.8
       FunctionName: Searchlf2
-      CodeUri: 's3://testpipelinegithubqm/5fc95cf9025340121ccc8332920f9372'
+      CodeUri: ./src/search_photos
       MemorySize: 128
       Timeout: 3
       Role: 'arn:aws:iam::840723909099:role/service-role/search-photos-role-1k677fab'
@@ -67,7 +67,7 @@ Resources:
       Handler: search_photos.lambda_handler
       Runtime: python3.8
       FunctionName: Indexlf
-      CodeUri: 's3://testpipelinegithubqm/45554be4e73e4c354870893a262b16d6'
+      CodeUri: ./src/index_photos
       MemorySize: 128
       Timeout: 3
       Role: 'arn:aws:iam::840723909099:role/service-role/photoIndex-role-sz2l5aln'
